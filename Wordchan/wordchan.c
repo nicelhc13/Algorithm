@@ -1,0 +1,174 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define DEBUGING_MODE	0
+
+#define ALPH_CNT 26
+#define WORD_LEN 100
+#define WORD_CNT 100
+
+#define EULER_CYCLE 0
+#define EULER_TRAIL 1
+#define FAIL		2
+
+char words[WORD_CNT][WORD_LEN];
+char results[WORD_CNT][WORD_LEN];
+int edgeNum[ALPH_CNT][ALPH_CNT][WORD_CNT];
+int edgeIdx[ALPH_CNT][ALPH_CNT];
+int inEdge[ALPH_CNT];
+int outEdge[ALPH_CNT];
+int adj[ALPH_CNT][ALPH_CNT];
+
+int tc;
+int wn;
+
+int resIdx;
+int mode;
+
+void dfs(int from, int to) {
+	int there, result;
+	
+	adj[from][to]--;
+	if (DEBUGING_MODE)
+		printf("# out(from:%c, to:%c): %d\n\n", from+'a', to+'a',  adj[from][to]);
+	for (there = 0; there < ALPH_CNT; there++) {
+		while (adj[to][there]) {
+			dfs(to, there);
+		}
+	}
+
+	strcpy(results[resIdx++], words[edgeNum[from][to][edgeIdx[from][to]-1]]);
+	edgeIdx[from][to]--;
+}
+
+int checkEulerType(void) {
+	int i, j;
+	int	susType = EULER_CYCLE;
+	int eulerStart = 0;
+	int eulerEnd = 0;
+
+	for (i = 0; i < ALPH_CNT; i++) {
+		if (outEdge[i] > inEdge[i]+1 || 
+				outEdge[i]+1 < inEdge[i])	return FAIL;
+
+		if (outEdge[i]+1 == inEdge[i]) {
+			if (eulerStart > 0)	return FAIL; 
+			eulerStart++;
+			continue;
+		}
+		if (outEdge[i] == inEdge[i]+1) {
+			if (eulerEnd > 0) return FAIL;
+			eulerEnd++;
+			continue;
+		}
+	}
+
+	if (DEBUGING_MODE) {
+		for (i = 0; i < ALPH_CNT; i++)
+			printf("%c, out: %d, in: %d\n", i+'a', outEdge[i], inEdge[i]); 
+	}
+
+	if (eulerStart == 1 && eulerEnd == 1) return EULER_TRAIL;
+	else if (eulerStart == 0 && eulerEnd == 0) return EULER_CYCLE;
+	else return FAIL;
+}
+
+int findSolution(void) {
+	int i, j, isFailed = 0;
+	int type = 0;
+
+	type = checkEulerType();
+	if (type == FAIL)	return type;
+
+	if (DEBUGING_MODE) {
+		if (type == FAIL) printf("FAIL\n");
+		else if (type == EULER_TRAIL) printf("EULER_TRAIL\n");
+		else printf("EULER_CYCLE\n");
+	}
+
+	/* if it is euler trailer */
+	for (i = 0; i < ALPH_CNT; i++) {
+		for (j = 0;j < ALPH_CNT; j++) {
+			if (type == EULER_TRAIL && outEdge[i] == inEdge[i]+1) {
+				if (adj[i][j]) {
+					dfs(i, j);
+					return type;
+				}
+			}
+			else if(type == EULER_CYCLE && adj[i][j]) {
+				dfs(i, j);
+				return type;
+			}
+		}
+	}
+}
+
+
+void makeGraph(void)
+{
+	int i, j, k;
+	char sc, ec;
+
+	for (i = 0; i < wn; i++) {
+		sc = words[i][0]-'a';
+		ec = words[i][strlen(words[i])-1]-'a';
+		// sc --> ec
+		if (sc != ec) {
+			inEdge[ec]++;
+			outEdge[sc]++;
+		}
+		adj[sc][ec]++;
+		edgeNum[sc][ec][edgeIdx[sc][ec]] = i;
+		edgeIdx[sc][ec]++;
+		if (DEBUGING_MODE)
+			printf("sc: %c, ec: %c, outEdge: %d\n", sc+'a', ec+'a', adj[sc][ec]);
+	} 
+}
+
+int main(void)
+{
+	int i, j, result;
+	scanf("%d", &tc);
+	
+	for (i = 0; i < tc; i++) {
+		scanf("%d", &wn);
+
+		memset(words, 0, WORD_CNT*WORD_LEN*sizeof(char));
+		memset(edgeNum, 0, ALPH_CNT*ALPH_CNT*WORD_CNT*sizeof(int));
+		memset(adj, 0, ALPH_CNT*ALPH_CNT*sizeof(int));
+		memset(edgeIdx, 0, ALPH_CNT*ALPH_CNT*sizeof(int)); 
+		memset(inEdge, 0, ALPH_CNT*sizeof(int));
+		memset(outEdge, 0, ALPH_CNT*sizeof(int));
+		memset(results, -1, WORD_CNT*WORD_LEN*sizeof(char));
+			
+		resIdx = 0;
+		mode = 0;
+
+		for (j = 0; j < wn; j++) {
+			scanf("%s", words[j]);
+		}
+		
+		makeGraph();
+		if ((result = findSolution()) == FAIL) {
+			printf("IMPOSSIBLE\n");
+			continue;
+		}
+		
+		if (resIdx != wn) {
+			printf("IMPOSSIBLE\n");
+			continue;
+		}
+
+	
+		for (j = resIdx-1; j >= 0; j--)
+			printf("%s ", results[j]);
+		printf("\n");
+		
+
+		if (DEBUGING_MODE == 1) {
+				for (j = 0;j < wn; j++)
+					printf(">> %s\n", words[j]);
+		}
+	}
+} 
