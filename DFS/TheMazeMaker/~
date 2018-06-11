@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int h, w;
+vector<pair<int, int> > outedge;
+vector<vector<char> > mazes;
+
+pair<int, int> calc_out(int x, int y, int val)
+{
+	if (x == 0 && y == 0) { // 0, 0
+		// 0 x x 0
+		if (val | 0 == 0 || val>>3 | 0 == 0) return 1;
+	} else if (x == 0 && y == w-1) { // 0, n
+
+	} else if (x == h-1 && y == w-1) { // n, n
+
+	} else if (x == h-1 && y == 0) { // n, 0
+
+	} else if (0 < x && x < h && y == 0) { // n-x, 0
+
+	} else if (x == 0 && 0 < y && y < w) { // 0, n-y
+
+	} else if (0 < x && x < h && y == w-1) { // n-x, n
+
+	} else if (x == h-1 && 0 < y && y < w) { // n, n-x
+
+	}
+	
+
+}
+
+int try_walking(int x, int y)
+{
+	if (x == y == dest) return
+
+	vector(pair <int, int>) // 현재 위치에서 갈 수 있는 좌표 목록..
+		// maze의 크기를 벗어나면 안됨
+		for (a)
+				ret += try_walking();
+
+	return ret;
+}
+
+
+int main(void)
+{
+	while (true) {
+		cin >> h >> w;
+		if (h == 0 && w == 0)	return 0;
+		mazes = vector<vector <char> >(h, vector<char>(w, 0));
+		outedge.resize(0);
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; j++) {
+				cin >> mazes[i][j]; 
+			}
+		}
+	}
+	return 0;
+}
+
