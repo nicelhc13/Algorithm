@@ -1,3 +1,3 @@
 
 default:
-	g++ -o hanoi hanoi.cpp 
+	g++ -o hanoi hanoi_bidir.cpp 
