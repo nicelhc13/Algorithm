@@ -1,0 +1,16 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+void set(int _stat, int _idx, int _r) {
+
+}
+
+
+
+int main(void)
+{
+	return 0;
+}
