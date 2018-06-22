@@ -1,0 +1,85 @@
+#include <iostream>
+#include <queue>
+#include <utility>
+#include <algorithm>
+
+#define MAX_V 10
+#define INF 987654321
+
+using namespace std;
+
+// next and cost
+vector<pair<int, int> > adj[MAX_V];
+
+void dijkstra2(int src)
+{
+	vector<int> dist(MAX_V, INF);
+	vector<bool> visited(V, false);
+	dist[src] = 0; visited[src] = true;
+	while (true) {
+		int closest = INF, here;
+		for (int i = 0; i < MAX_V; i++) {
+			if (closest > dist[i] && !visited[i]) {
+				here = i;
+				closest = dist[i];
+			}
+		}
+
+	}
+	
+}
+
+void dijkstra(int src)
+{
+	vector<int> dist(MAX_V, INF);
+	vector<int> parents(MAX_V, INF);
+	dist[src] = 0;
+	priority_queue<pair<int, int> > pq;
+	pq.push(make_pair(0, src));
+	parents[0] = 0;
+	
+	while(!pq.empty()) {
+		int cost = -pq.top().first;
+		int here = pq.top().second;
+		pq.pop();
+		if (dist[here] < cost) continue;
+
+		for (int i = 0; i < adj[here].size(); i++) {
+			int there = adj[here][i].first;
+			int next_dist = adj[here][i].second+cost;
+			if (dist[there] < next_dist) continue;
+			dist[there] = next_dist;
+			pq.push(make_pair(-next_dist, there));
+			parents[there] = here;
+		}
+	}
+
+	cout << dist[3] << endl;
+	vector<int> order;
+	order.push_back(3);
+	int k = 3;
+	while (true) {
+		int parent = parents[k];
+		order.push_back(parent);
+		k = parent;
+		if (k == 0) break;
+	}
+
+	reverse(order.begin(), order.end());
+	for (int i = 0;i < order.size(); i++) cout << order[i] << " ";
+}
+
+int main(void)
+{
+	for (int i = 0; i < 4; i++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+//		cout << a <<"," << b << "," << c << endl;
+		adj[a].push_back(make_pair(b, c));
+	}
+
+	dijkstra(0);
+//	cout << dijkstra() << endl;
+	
+	return 0;
+}
