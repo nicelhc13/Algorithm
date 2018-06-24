@@ -3,6 +3,7 @@
 #include <utility>
 #include <queue>
 #include <cstdio>
+#include <cmath>
 
 #define MAX_V 30000
 
@@ -15,8 +16,8 @@ vector<double> dijkstra(int start)
 	priority_queue<pair<double, int> > pq;
 	vector<double> dists(MAX_V, -1);
 
-	pq.push(make_pair(-1,start)); 
-	dists[start] = 1;
+	pq.push(make_pair(0,start)); 
+	dists[start] = 0;
 	while(!pq.empty()) {
 		int here = pq.top().second;
 		double cost = -pq.top().first;
@@ -26,7 +27,7 @@ vector<double> dijkstra(int start)
 		
 		for (int i = 0; i < adj[here].size(); i++) {
 			int there = adj[here][i].first;
-			double next_dist = cost*adj[here][i].second;
+			double next_dist = cost+adj[here][i].second;
 
 			if (next_dist >= dists[there] && dists[there] != -1) continue;
 				pq.push(make_pair(-next_dist, there));
@@ -55,14 +56,13 @@ int main(void)
 			int a, b;
 			double w;
 			cin >> a >> b >> w; 
-			adj[a].push_back(make_pair(b, w));
-			adj[b].push_back(make_pair(a, w));
+			adj[a].push_back(make_pair(b, log(w)));
+			adj[b].push_back(make_pair(a, log(w)));
 		}
 		vector<double> dist = dijkstra(0);
 		cout << fixed;
-		cout.precision(10);
-
-		cout << dist[n-1] << endl;
+		cout << exp(dist[n-1]) << endl;
+		
 	}
 
 	return 0;
