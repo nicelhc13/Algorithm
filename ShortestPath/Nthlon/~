@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+
+using namespace std;
+
+#define MAX 501
+#define START 400
+
+vector<pair<int, int> > adj;
+
+int customize(int n)
+{
+	return n+200;
+}
+
+int solve(int m) {
+	vector<pair<int, int> > graph[MAX];
+
+	for (int i = 0; i < m; i++) {
+		int a = adj[i].first;
+		int b = adj[i].second;
+		graph[START].push_back(a+b, customize(a-b));
+	}
+
+	for (int i = -199; i < 200; i++) {
+		for (int j = 0; j < m; j++) {
+			int a = adj[j].first;
+			int b = adj[j].second;
+			int delta = a-b+graph[i].second;
+			if (abs(delta) > 200) continue;
+			graph[vertex[i]].push_back(a+b, customize(delta));
+		}
+	}
+	
+	for (int i = 1; i < 400; i++)
+		cout << graph[i] << endl;
+}
+
+int main(void)
+{
+	int c, m;
+
+	cin >> c;
+	for (int i = 0; i < c; i++) {
+		cin >> m;
+		for (int j = 0; j < MAX; j++)
+			adj[j].resize(0);
+
+		for (int j = 0; j < m; j++) {
+			int a, b;
+			cin >> a >> b;
+			adj[j].push_back(make_pair(a, b));
+		}
+
+		int result = solve(m);
+		cout << result << endl;
+	}
+
+	return 0;
+}
