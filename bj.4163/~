@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <queue>
+
+using namespace std;
+
+#define MAX 100001
+#define INF 98765432198765
+
+vector<pair<int, int> > adj[MAX];
+vector<int> shops;
+
+vector<long long int> dijkstra(int n, int start) {
+	priority_queue<pair<long long int, int> > pq;
+	vector<long long int> dist(n, INF);
+
+	pq.push(make_pair(0, start));
+	dist[start] = 0;
+
+	while (!pq.empty()) {
+		int here = pq.top().second;
+		long long int cost = -pq.top().first;
+		pq.pop();
+
+		if (cost > dist[here]) continue;
+		for (int i = 0; i < adj[here].size(); i++) {
+			int there = adj[here][i].first;
+			long long int t_cost = adj[here][i].second+cost;
+			if (t_cost >= dist[there]) continue;
+			pq.push(make_pair(-t_cost, there));
+			dist[there] = t_cost;
+		}
+	}
+
+	return dist;
+}
+
+int dfs(
+
+int main(void)
+{
+	int c, n, m;
+
+	cin >> c;
+	for (int i = 0; i < c; i++) {
+		cin >> n >> m;
+		for (int j = 0; j < MAX; j++)
+			while (adj[j].size() > 0) adj[j].resize(0);
+
+		shops.resize(0);
+		for (int j = 0; j < m; j++)
+		{
+			int a, b, w;
+			cin >> a >> b >> w;
+			adj[a].push_back(make_pair(b, w));
+			adj[b].push_back(make_pair(a, w));
+		}
+	
+		int s;
+		cin >> s;
+		for (int j = 0; j < s; j++)
+		{
+			int sn;
+			cin >> sn;
+			shops.push_back(sn);
+		}
+
+		vector<long long int> dist = dijkstra(0, 0);
+long long int result = 0;
+	for (int i = 0; i < shops.size(); i++) {
+		result += dist[shops[i]];
+	}
+	result += dist[start];
+	cout << result << endl;
+
+	}
+}
