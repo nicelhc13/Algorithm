@@ -22,6 +22,8 @@ int solve(int v, int sign)
 	vector<int> upper(v, INF);
 	upper[START] = 0;
 
+	// do not touch the original value,
+	// it is possible that i and j are directly connected!
 	for (int k = 0; k < v; k++)
 		for (int i = 0; i < v; i++)
 			for (int j = 0; j < v; j++)
