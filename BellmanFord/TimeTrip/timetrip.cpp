@@ -55,7 +55,7 @@ int solve(int v, int sign)
 		}
 	}
 
-	if (upper[ANDROMEDA] >= INF) { 
+	if (upper[ANDROMEDA] >= INF-M) { 
 		cout << "UNREACHABLE" << endl;
 		return UNREACHABLE;
 	}
